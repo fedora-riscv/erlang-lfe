@@ -24,7 +24,7 @@
 
 Name:		erlang-%{realname}
 Version:	0.6.1
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	Lisp Flavoured Erlang
 Group:		Development/Languages
 License:	BSD
@@ -142,6 +142,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.1-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
 * Wed Nov 17 2010 Peter Lemenkov <lemenkov@gmail.com> - 0.6.1-5
 - Make building of emacs sub-packages conditional (and disable on EL-5)
 
