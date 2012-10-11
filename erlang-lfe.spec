@@ -1,12 +1,16 @@
 %global realname lfe
+%global upstream rvirding
 %global debug_package %{nil}
-%global git_tag 1bcf461
+%global git_tag 15b36cb
+%global patchnumber 0
+
 
 %if 0%{?el6}%{?fedora}
 %bcond_without emacs
 %else
 %bcond_with emacs
 %endif
+
 
 %if %{with emacs}
 # If the emacs-el package has installed a pkgconfig file, use that to determine
@@ -22,31 +26,32 @@
 %endif
 %endif
 
+
 Name:		erlang-%{realname}
-Version:	0.6.1
-Release:	8%{?dist}
+Version:	0.6.2
+Release:	1%{?dist}
 Summary:	Lisp Flavoured Erlang
 Group:		Development/Languages
 License:	BSD
 URL:		http://github.com/rvirding/lfe
-Source0:	http://github.com/rvirding/lfe/tarball/v0.6.1/rvirding-%{realname}-v%{version}-0-g%{git_tag}.tar.gz
-Patch1:		erlang-lfe-0001-No-such-option-for-which-s.patch
+# wget --content-disposition http://github.com/rvirding/lfe/tarball/v0.6.2
+Source0:	%{upstream}-%{realname}-%{version}-%{patchnumber}-g%{git_tag}.tar.gz
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
-BuildRequires:	erlang-erts
+BuildRequires:	erlang-rebar
 %if %{with emacs}
 BuildRequires:	emacs(bin), emacs-el >= 22.1-2
 BuildRequires:	pkgconfig
-#BuildRequires:	erlang-rebar
 BuildRequires:	emacs
 BuildRequires:	xemacs
 BuildRequires:	emacs-el
 BuildRequires:	xemacs-packages-extra-el
 %endif
 
-Requires:	erlang-compiler
-Requires:	erlang-erts
-Requires:	erlang-kernel
-Requires:	erlang-stdlib
+Requires:	erlang-compiler%{?_isa}
+Requires:	erlang-erts%{?_isa}
+Requires:	erlang-kernel%{?_isa}
+# Error:erlang(unicode:characters_to_list/1) in R12B and earlier
+Requires:	erlang-stdlib%{?_isa} >= R13B
 
 
 %description
@@ -80,8 +85,7 @@ Lisp Flavoured Erlang with GNU Emacs.
 
 
 %prep
-%setup -q -n rvirding-%{realname}-%{git_tag}
-%patch1 -p1 -b .no_such_option
+%setup -q -n %{upstream}-%{realname}-%{git_tag}
 iconv -f iso-8859-1 -t UTF-8 README  > README.utf8
 mv -f README.utf8  README
 iconv -f iso-8859-1 -t UTF-8  examples/core-macros.lfe > examples/core-macros.lfe.utf8
@@ -93,7 +97,7 @@ rm emacs/lfe-mode.elc
 
 
 %build
-make %{?_smp_mflags}
+rebar compile -v
 %if %{with emacs}
 emacs -batch -f batch-byte-compile emacs/lfe-mode.el
 %endif
@@ -116,8 +120,11 @@ install -p -m 0644 emacs/lfe-start.el %{buildroot}%{emacs_startdir}
 rm -rf %{buildroot}
 
 
+%check
+rebar eunit -v
+
+
 %files
-%defattr(-,root,root,-)
 %doc COPYRIGHT README doc/ examples/
 %if %{without emacs}
 %doc emacs/
@@ -130,18 +137,19 @@ rm -rf %{buildroot}
 
 %if %{with emacs}
 %files -n emacs-erlang-lfe
-%defattr(-,root,root,-)
 %{emacs_startdir}/lfe-start.el
 %{emacs_lispdir}/lfe-mode.elc
 
 
 %files -n emacs-erlang-lfe-el
-%defattr(-,root,root,-)
 %{emacs_lispdir}/lfe-mode.el
 %endif
 
 
 %changelog
+* Thu Oct 11 2012 Peter Lemenkov <lemenkov@gmail.com> - 0.6.2-1
+- Ver. 0.6.2 (Backwards API/ABI compatible)
+
 * Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.1-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
