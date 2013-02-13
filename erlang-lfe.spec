@@ -29,7 +29,7 @@
 
 Name:		erlang-%{realname}
 Version:	0.6.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Lisp Flavoured Erlang
 Group:		Development/Languages
 License:	BSD
@@ -147,6 +147,9 @@ rebar eunit -v
 
 
 %changelog
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Thu Oct 11 2012 Peter Lemenkov <lemenkov@gmail.com> - 0.6.2-1
 - Ver. 0.6.2 (Backwards API/ABI compatible)
 
