@@ -1,51 +1,21 @@
 %global realname lfe
-%global upstream rvirding
-%global debug_package %{nil}
-%global git_tag 15b36cb
-%global patchnumber 0
-
-
-%if 0%{?el6}%{?fedora}
-%bcond_without emacs
-%else
-%bcond_with emacs
-%endif
-
-
-%if %{with emacs}
-# If the emacs-el package has installed a pkgconfig file, use that to determine
-# install locations and Emacs version at build time, otherwise set defaults.
-%if %($(pkg-config emacs) ; echo $?)
-%define emacs_version 22.1
-%define emacs_lispdir %{_datadir}/emacs/site-lisp
-%define emacs_startdir %{_datadir}/emacs/site-lisp/site-start.d
-%else
-%define emacs_version %(pkg-config emacs --modversion)
-%define emacs_lispdir %(pkg-config emacs --variable sitepkglispdir)
-%define emacs_startdir %(pkg-config emacs --variable sitestartdir)
-%endif
-%endif
 
 
 Name:		erlang-%{realname}
-Version:	0.6.2
-Release:	5%{?dist}
+Version:	0.9.0
+Release:	1%{?dist}
 Summary:	Lisp Flavoured Erlang
 Group:		Development/Languages
 License:	BSD
 URL:		http://github.com/rvirding/lfe
-# wget --content-disposition http://github.com/rvirding/lfe/tarball/v0.6.2
-Source0:	%{upstream}-%{realname}-%{version}-%{patchnumber}-g%{git_tag}.tar.gz
-BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
+%if 0%{?el7}%{?fedora}
+VCS:		scm:git:https://github.com/rvirding/lfe.git
+%endif
+Source0:	https://github.com/rvirding/lfe/archive/v%{version}/%{realname}-%{version}.tar.gz
 BuildRequires:	erlang-rebar
-%if %{with emacs}
-BuildRequires:	emacs(bin), emacs-el >= 22.1-2
 BuildRequires:	pkgconfig
 BuildRequires:	emacs
-BuildRequires:	xemacs
 BuildRequires:	emacs-el
-BuildRequires:	xemacs-packages-extra-el
-%endif
 
 Requires:	erlang-compiler%{?_isa}
 Requires:	erlang-erts%{?_isa}
@@ -59,11 +29,11 @@ Lisp Flavoured Erlang, is a lisp syntax front-end to the Erlang
 compiler. Code produced with it is compatible with "normal" Erlang
 code. An LFE evaluator and shell is also included.
 
-%if %{with emacs}
 %package -n emacs-erlang-lfe
 Summary:	Emacs major mode for Lisp Flavoured Erlang
 Group:		Applications/Editors
 Requires:	%{name} = %{version}-%{release}
+Requires:	emacs(bin) >= %{_emacs_version}
 BuildArch:	noarch
 
 %description -n emacs-erlang-lfe
@@ -74,6 +44,7 @@ files.
 Summary:	Elisp source files for Lisp Flavoured Erlang under GNU Emacs
 Group:		Applications/Editors
 Requires:	%{name} = %{version}-%{release}
+Requires:	emacs(bin) >= %{_emacs_version}
 BuildArch:	noarch
 
 %description -n emacs-erlang-lfe-el
@@ -81,43 +52,27 @@ This package contains the elisp source files for Lisp Flavoured Erlang
 under GNU Emacs. You do not need to install this package to run
 Lisp Flavoured Erlang. Install the emacs-erlang-lfe package to use
 Lisp Flavoured Erlang with GNU Emacs.
-%endif
 
 
 %prep
-%setup -q -n %{upstream}-%{realname}-%{git_tag}
-iconv -f iso-8859-1 -t UTF-8 README  > README.utf8
-mv -f README.utf8  README
+%setup -q -n %{realname}-%{version}
 iconv -f iso-8859-1 -t UTF-8  examples/core-macros.lfe > examples/core-macros.lfe.utf8
 mv  -f examples/core-macros.lfe.utf8 examples/core-macros.lfe
-iconv -f iso-8859-1 -t UTF-8 doc/release_notes.txt > doc/release_notes.txt.utf8
-mv -f doc/release_notes.txt.utf8 doc/release_notes.txt
-# Remove precompiled elisp binary
-rm emacs/lfe-mode.elc
 
 
 %build
 rebar compile -v
-%if %{with emacs}
 emacs -batch -f batch-byte-compile emacs/lfe-mode.el
-%endif
 
 
 %install
-rm -rf %{buildroot}
 install -p -m 0644 -D ebin/%{realname}.app %{buildroot}%{_libdir}/erlang/lib/%{realname}-%{version}/ebin/%{realname}.app
 install -p -m 0644 ebin/%{realname}_*.beam %{buildroot}%{_libdir}/erlang/lib/%{realname}-%{version}/ebin
-%if %{with emacs}
-mkdir -p %{buildroot}%{emacs_lispdir}
-mkdir -p %{buildroot}%{emacs_startdir}
-install -p -m 0644 emacs/lfe-mode.el %{buildroot}%{emacs_lispdir}
-install -p -m 0644 emacs/lfe-mode.elc %{buildroot}%{emacs_lispdir}
-install -p -m 0644 emacs/lfe-start.el %{buildroot}%{emacs_startdir}
-%endif
-
-
-%clean
-rm -rf %{buildroot}
+mkdir -p %{buildroot}%{_emacs_sitelispdir}
+mkdir -p %{buildroot}%{_emacs_sitestartdir}
+install -p -m 0644 emacs/lfe-mode.el %{buildroot}%{_emacs_sitelispdir}
+install -p -m 0644 emacs/lfe-mode.elc %{buildroot}%{_emacs_sitelispdir}
+install -p -m 0644 emacs/lfe-start.el %{buildroot}%{_emacs_sitestartdir}
 
 
 %check
@@ -125,28 +80,27 @@ rebar eunit -v
 
 
 %files
-%doc COPYRIGHT README doc/ examples/
-%if %{without emacs}
-%doc emacs/
-%endif
+%doc LICENSE README.md doc/ examples/
 %dir %{_libdir}/erlang/lib/%{realname}-%{version}
 %dir %{_libdir}/erlang/lib/%{realname}-%{version}/ebin
 %{_libdir}/erlang/lib/%{realname}-%{version}/ebin/%{realname}.app
 %{_libdir}/erlang/lib/%{realname}-%{version}/ebin/%{realname}_*.beam
 
 
-%if %{with emacs}
 %files -n emacs-erlang-lfe
-%{emacs_startdir}/lfe-start.el
-%{emacs_lispdir}/lfe-mode.elc
+%{_emacs_sitestartdir}/lfe-start.el
+%{_emacs_sitelispdir}/lfe-mode.elc
 
 
 %files -n emacs-erlang-lfe-el
-%{emacs_lispdir}/lfe-mode.el
-%endif
+%{_emacs_sitelispdir}/lfe-mode.el
 
 
 %changelog
+* Sun Nov 16 2014 Peter Lemenkov <lemenkov@gmail.com> - 0.9.0-1
+- Ver. 0.9.0
+- Drop support for EL5
+
 * Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.2-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
