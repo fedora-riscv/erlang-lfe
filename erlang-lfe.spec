@@ -1,9 +1,10 @@
 %global realname lfe
+%global debug_package %{nil}
 
 
 Name:		erlang-%{realname}
 Version:	0.9.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Lisp Flavoured Erlang
 Group:		Development/Languages
 License:	BSD
@@ -97,6 +98,9 @@ rebar eunit -v
 
 
 %changelog
+* Sun Nov 16 2014 Peter Lemenkov <lemenkov@gmail.com> - 0.9.0-2
+- Disable debuginfo
+
 * Sun Nov 16 2014 Peter Lemenkov <lemenkov@gmail.com> - 0.9.0-1
 - Ver. 0.9.0
 - Drop support for EL5
