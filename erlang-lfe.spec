@@ -4,7 +4,7 @@
 
 Name:		erlang-%{realname}
 Version:	0.9.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Lisp Flavoured Erlang
 Group:		Development/Languages
 License:	BSD
@@ -98,6 +98,9 @@ rebar eunit -v
 
 
 %changelog
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
 * Sun Nov 16 2014 Peter Lemenkov <lemenkov@gmail.com> - 0.9.0-2
 - Disable debuginfo
 
