@@ -17,7 +17,7 @@ BuildRequires:	erlang-rebar
 BuildRequires:	pkgconfig
 BuildRequires:	emacs
 BuildRequires:	emacs-el
-Requires:	%{__erlang_drv_version}
+%{?__erlang_drv_version:Requires: %{__erlang_drv_version}}
 
 
 %description
