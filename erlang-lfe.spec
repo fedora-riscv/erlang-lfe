@@ -5,7 +5,7 @@
 
 Name:		erlang-%{realname}
 Version:	0.10.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Lisp Flavoured Erlang
 Group:		Development/Languages
 License:	BSD
@@ -62,8 +62,12 @@ emacs -batch -f batch-byte-compile emacs/lfe-mode.el
 
 
 %install
-install -p -m 0644 -D ebin/%{realname}.app %{buildroot}%{_libdir}/erlang/lib/%{realname}-%{version}/ebin/%{realname}.app
-install -p -m 0644 ebin/%{realname}_*.beam %{buildroot}%{_libdir}/erlang/lib/%{realname}-%{version}/ebin
+install -m 0755 -d %{buildroot}%{_libdir}/erlang/lib/%{realname}-%{version}/{ebin,bin}
+install -p -m 0755 -D ebin/* %{buildroot}%{_libdir}/erlang/lib/%{realname}-%{version}/ebin/
+install -p -m 0755 -D bin/*  %{buildroot}%{_libdir}/erlang/lib/%{realname}-%{version}/bin/
+install -m 0755 -d %{buildroot}/%{_bindir}
+ln -s %{_libdir}/erlang/lib/%{realname}-%{version}/bin/{lfe,lfec,lfeexec,lfescript} %{buildroot}%{_bindir}/
+
 mkdir -p %{buildroot}%{_emacs_sitelispdir}
 mkdir -p %{buildroot}%{_emacs_sitestartdir}
 install -p -m 0644 emacs/lfe-mode.el %{buildroot}%{_emacs_sitelispdir}
@@ -78,6 +82,10 @@ rebar eunit -v
 %files
 %license LICENSE
 %doc README.md doc/ examples/
+%{_bindir}/lfe
+%{_bindir}/lfec
+%{_bindir}/lfeexec
+%{_bindir}/lfescript
 %{_erllibdir}/%{realname}-%{version}
 
 
@@ -91,6 +99,9 @@ rebar eunit -v
 
 
 %changelog
+* Tue Mar  1 2016 Peter Lemenkov <lemenkov@gmail.com> - 0.10.1-2
+- Install CLI tools as well
+
 * Tue Mar  1 2016 Peter Lemenkov <lemenkov@gmail.com> - 0.10.1-1
 - Ver. 0.10.1
 
