@@ -1,6 +1,5 @@
 %global realname lfe
 %global upstream rvirding
-%global debug_package %{nil}
 
 
 Name:		erlang-%{realname}
