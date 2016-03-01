@@ -17,6 +17,7 @@ BuildRequires:	erlang-rebar
 BuildRequires:	pkgconfig
 BuildRequires:	emacs
 BuildRequires:	emacs-el
+Requires:	%{__erlang_drv_version}
 
 
 %description
@@ -57,20 +58,25 @@ mv  -f examples/core-macros.lfe.utf8 examples/core-macros.lfe
 
 %build
 %{rebar_compile}
-emacs -batch -f batch-byte-compile emacs/lfe-mode.el
+emacs -L emacs/ -batch -f batch-byte-compile emacs/inferior-lfe.el emacs/lfe-mode.el emacs/lfe-indent.el
 
 
 %install
-install -m 0755 -d %{buildroot}%{_libdir}/erlang/lib/%{realname}-%{version}/{ebin,bin}
+install -m 0755 -d %{buildroot}%{_libdir}/erlang/lib/%{realname}-%{version}/{bin,ebin,priv}
 install -p -m 0755 -D ebin/* %{buildroot}%{_libdir}/erlang/lib/%{realname}-%{version}/ebin/
 install -p -m 0755 -D bin/*  %{buildroot}%{_libdir}/erlang/lib/%{realname}-%{version}/bin/
+install -p -m 0755 priv/%{realname}_drv.so %{buildroot}%{_libdir}/erlang/lib/%{realname}-%{version}/priv/
 install -m 0755 -d %{buildroot}/%{_bindir}
-ln -s %{_libdir}/erlang/lib/%{realname}-%{version}/bin/{lfe,lfec,lfeexec,lfescript} %{buildroot}%{_bindir}/
+ln -s %{_libdir}/erlang/lib/%{realname}-%{version}/bin/{lfe,lfec,lfescript} %{buildroot}%{_bindir}/
 
 mkdir -p %{buildroot}%{_emacs_sitelispdir}
 mkdir -p %{buildroot}%{_emacs_sitestartdir}
+install -p -m 0644 emacs/inferior-lfe.el %{buildroot}%{_emacs_sitelispdir}
+install -p -m 0644 emacs/inferior-lfe.elc %{buildroot}%{_emacs_sitelispdir}
 install -p -m 0644 emacs/lfe-mode.el %{buildroot}%{_emacs_sitelispdir}
 install -p -m 0644 emacs/lfe-mode.elc %{buildroot}%{_emacs_sitelispdir}
+install -p -m 0644 emacs/lfe-indent.el %{buildroot}%{_emacs_sitelispdir}
+install -p -m 0644 emacs/lfe-indent.elc %{buildroot}%{_emacs_sitelispdir}
 install -p -m 0644 emacs/lfe-start.el %{buildroot}%{_emacs_sitestartdir}
 
 
@@ -83,18 +89,21 @@ rebar eunit -v
 %doc README.md doc/ examples/
 %{_bindir}/lfe
 %{_bindir}/lfec
-%{_bindir}/lfeexec
 %{_bindir}/lfescript
 %{_erllibdir}/%{realname}-%{version}
 
 
 %files -n emacs-erlang-lfe
 %{_emacs_sitestartdir}/lfe-start.el
+%{_emacs_sitelispdir}/inferior-lfe.elc
 %{_emacs_sitelispdir}/lfe-mode.elc
+%{_emacs_sitelispdir}/lfe-indent.elc
 
 
 %files -n emacs-erlang-lfe-el
+%{_emacs_sitelispdir}/inferior-lfe.el
 %{_emacs_sitelispdir}/lfe-mode.el
+%{_emacs_sitelispdir}/lfe-indent.el
 
 
 %changelog
