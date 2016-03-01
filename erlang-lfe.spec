@@ -1,28 +1,23 @@
 %global realname lfe
+%global upstream rvirding
 %global debug_package %{nil}
 
 
 Name:		erlang-%{realname}
-Version:	0.9.0
-Release:	4%{?dist}
+Version:	0.10.1
+Release:	1%{?dist}
 Summary:	Lisp Flavoured Erlang
 Group:		Development/Languages
 License:	BSD
-URL:		http://github.com/rvirding/lfe
+URL:		https://github.com/%{upstream}/%{realname}
 %if 0%{?el7}%{?fedora}
-VCS:		scm:git:https://github.com/rvirding/lfe.git
+VCS:		scm:git:https://github.com/%{upstream}/%{realname}.git
 %endif
-Source0:	https://github.com/rvirding/lfe/archive/v%{version}/%{realname}-%{version}.tar.gz
+Source0:	https://github.com/%{upstream}/%{realname}/archive/%{version}/%{realname}-%{version}.tar.gz
 BuildRequires:	erlang-rebar
 BuildRequires:	pkgconfig
 BuildRequires:	emacs
 BuildRequires:	emacs-el
-
-Requires:	erlang-compiler%{?_isa}
-Requires:	erlang-erts%{?_isa}
-Requires:	erlang-kernel%{?_isa}
-# Error:erlang(unicode:characters_to_list/1) in R12B and earlier
-Requires:	erlang-stdlib%{?_isa} >= R13B
 
 
 %description
@@ -62,7 +57,7 @@ mv  -f examples/core-macros.lfe.utf8 examples/core-macros.lfe
 
 
 %build
-rebar compile -v
+%{rebar_compile}
 emacs -batch -f batch-byte-compile emacs/lfe-mode.el
 
 
@@ -81,11 +76,9 @@ rebar eunit -v
 
 
 %files
-%doc LICENSE README.md doc/ examples/
-%dir %{_libdir}/erlang/lib/%{realname}-%{version}
-%dir %{_libdir}/erlang/lib/%{realname}-%{version}/ebin
-%{_libdir}/erlang/lib/%{realname}-%{version}/ebin/%{realname}.app
-%{_libdir}/erlang/lib/%{realname}-%{version}/ebin/%{realname}_*.beam
+%license LICENSE
+%doc README.md doc/ examples/
+%{_erllibdir}/%{realname}-%{version}
 
 
 %files -n emacs-erlang-lfe
@@ -98,6 +91,9 @@ rebar eunit -v
 
 
 %changelog
+* Tue Mar  1 2016 Peter Lemenkov <lemenkov@gmail.com> - 0.10.1-1
+- Ver. 0.10.1
+
 * Wed Feb 03 2016 Fedora Release Engineering <releng@fedoraproject.org> - 0.9.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
