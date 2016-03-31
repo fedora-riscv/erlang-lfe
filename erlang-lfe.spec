@@ -4,7 +4,7 @@
 # Set this to true when starting a rebuild of the whole erlang stack. There's a
 # cyclical dependency between erlang-erts, erlang-lfe, and erlang-rebar so this
 # package (erlang-lfe) needs to get built first in bootstrap mode.
-%global need_bootstrap 1
+%global need_bootstrap 0
 
 
 %if 0%{?need_bootstrap}
@@ -15,7 +15,7 @@
 
 Name:		erlang-%{realname}
 Version:	0.10.1
-Release:	2.1%{?dist}
+Release:	3%{?dist}
 Summary:	Lisp Flavoured Erlang
 Group:		Development/Languages
 License:	BSD
@@ -24,6 +24,7 @@ URL:		https://github.com/%{upstream}/%{realname}
 VCS:		scm:git:https://github.com/%{upstream}/%{realname}.git
 %endif
 Source0:	https://github.com/%{upstream}/%{realname}/archive/%{version}/%{realname}-%{version}.tar.gz
+Patch1:		erlang-lfe-0001-Remove-support-for-erlang-packages.patch
 %if 0%{?need_bootstrap}
 BuildRequires:	erlang-erts
 %else
@@ -67,6 +68,7 @@ Lisp Flavoured Erlang with GNU Emacs.
 
 %prep
 %setup -q -n %{realname}-%{version}
+%patch1 -p1 -b .no_erl_packages
 iconv -f iso-8859-1 -t UTF-8  examples/core-macros.lfe > examples/core-macros.lfe.utf8
 mv  -f examples/core-macros.lfe.utf8 examples/core-macros.lfe
 
@@ -84,7 +86,9 @@ emacs -L emacs/ -batch -f batch-byte-compile emacs/inferior-lfe.el emacs/lfe-mod
 install -m 0755 -d %{buildroot}%{_libdir}/erlang/lib/%{realname}-%{version}/{bin,ebin,priv}
 install -p -m 0755 -D ebin/* %{buildroot}%{_libdir}/erlang/lib/%{realname}-%{version}/ebin/
 install -p -m 0755 -D bin/*  %{buildroot}%{_libdir}/erlang/lib/%{realname}-%{version}/bin/
-%if 0%{!?need_bootstrap}
+%if 0%{?need_bootstrap}
+echo "we are going to install only bare minimum of LFE - just for rebar bootstrapping"
+%else
 install -p -m 0755 priv/%{realname}_drv.so %{buildroot}%{_libdir}/erlang/lib/%{realname}-%{version}/priv/
 %endif
 install -m 0755 -d %{buildroot}/%{_bindir}
@@ -102,7 +106,9 @@ install -p -m 0644 emacs/lfe-start.el %{buildroot}%{_emacs_sitestartdir}
 
 
 %check
-%if 0%{!?need_bootstrap}
+%if 0%{?need_bootstrap}
+echo "No tests during bootstrapping"
+%else
 rebar eunit -v
 %endif
 
@@ -130,6 +136,9 @@ rebar eunit -v
 
 
 %changelog
+* Wed Mar 30 2016 Peter Lemenkov <lemenkov@gmail.com> - 0.10.1-3
+- Rebuild with Erlang 18.3
+
 * Wed Mar 30 2016 Peter Lemenkov <lemenkov@gmail.com> - 0.10.1-2.1
 - Bootstrap (build w/o rebar) against Erlang 18.3
 
