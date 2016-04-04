@@ -4,7 +4,7 @@
 # Set this to true when starting a rebuild of the whole erlang stack. There's a
 # cyclical dependency between erlang-erts, erlang-lfe, and erlang-rebar so this
 # package (erlang-lfe) needs to get built first in bootstrap mode.
-%global need_bootstrap 0
+%global need_bootstrap 1
 
 
 %if 0%{?need_bootstrap}
@@ -14,8 +14,8 @@
 
 
 Name:		erlang-%{realname}
-Version:	0.10.1
-Release:	3%{?dist}
+Version:	1.0.1
+Release:	1%{?dist}
 Summary:	Lisp Flavoured Erlang
 Group:		Development/Languages
 License:	BSD
@@ -136,6 +136,9 @@ rebar eunit -v
 
 
 %changelog
+* Mon Apr  4 2016 Peter Lemenkov <lemenkov@gmail.com> - 1.0.1-1
+- Ver. 1.0.1
+
 * Wed Mar 30 2016 Peter Lemenkov <lemenkov@gmail.com> - 0.10.1-3
 - Rebuild with Erlang 18.3
 
