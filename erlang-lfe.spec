@@ -14,8 +14,8 @@
 
 
 Name:		erlang-%{realname}
-Version:	1.0.1
-Release:	2%{?dist}
+Version:	1.0.2
+Release:	1%{?dist}
 Summary:	Lisp Flavoured Erlang
 Group:		Development/Languages
 License:	BSD
@@ -136,6 +136,9 @@ rebar eunit -v
 
 
 %changelog
+* Sat Apr 16 2016 Peter Lemenkov <lemenkov@gmail.com> - 1.0.2-1
+- Ver. 1.0.2
+
 * Mon Apr  4 2016 Peter Lemenkov <lemenkov@gmail.com> - 1.0.1-2
 - Ver. 1.0.1
 
