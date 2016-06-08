@@ -87,7 +87,7 @@ install -p -m 0644 emacs/lfe-start.el %{buildroot}%{_emacs_sitestartdir}
 %if 0%{?need_bootstrap}
 echo "No tests during bootstrapping"
 %else
-%{erlang_eunit}
+%{erlang_test}
 %endif
 
 
