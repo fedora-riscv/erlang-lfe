@@ -15,7 +15,7 @@
 
 Name:		erlang-%{realname}
 Version:	1.0.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Lisp Flavoured Erlang
 Group:		Development/Languages
 License:	BSD
@@ -33,6 +33,9 @@ BuildRequires:	erlang-rebar
 BuildRequires:	pkgconfig
 BuildRequires:	emacs
 BuildRequires:	emacs-el
+Requires:	emacs-filesystem
+Obsoletes:	emacs-erlang-lfe
+Obsoletes:	emacs-erlang-lfe-el
 %{?__erlang_drv_version:Requires: %{__erlang_drv_version}}
 
 
@@ -40,31 +43,6 @@ BuildRequires:	emacs-el
 Lisp Flavoured Erlang, is a lisp syntax front-end to the Erlang
 compiler. Code produced with it is compatible with "normal" Erlang
 code. An LFE evaluator and shell is also included.
-
-%package -n emacs-erlang-lfe
-Summary:	Emacs major mode for Lisp Flavoured Erlang
-Group:		Applications/Editors
-Requires:	%{name} = %{version}-%{release}
-Requires:	emacs(bin) >= %{_emacs_version}
-BuildArch:	noarch
-
-%description -n emacs-erlang-lfe
-This package provides an Emacs major mode to edit Lisp Flavoured Erlang
-files.
-
-%package -n emacs-erlang-lfe-el
-Summary:	Elisp source files for Lisp Flavoured Erlang under GNU Emacs
-Group:		Applications/Editors
-Requires:	%{name} = %{version}-%{release}
-Requires:	emacs(bin) >= %{_emacs_version}
-BuildArch:	noarch
-
-%description -n emacs-erlang-lfe-el
-This package contains the elisp source files for Lisp Flavoured Erlang
-under GNU Emacs. You do not need to install this package to run
-Lisp Flavoured Erlang. Install the emacs-erlang-lfe package to use
-Lisp Flavoured Erlang with GNU Emacs.
-
 
 %prep
 %setup -q -n %{realname}-%{version}
@@ -77,7 +55,7 @@ mv  -f examples/core-macros.lfe.utf8 examples/core-macros.lfe
 %if 0%{?need_bootstrap}
 /usr/bin/erlc -o ./ebin/ src/*.erl
 %else
-%{rebar_compile}
+%{erlang_compile}
 %endif
 emacs -L emacs/ -batch -f batch-byte-compile emacs/inferior-lfe.el emacs/lfe-mode.el emacs/lfe-indent.el
 
@@ -109,7 +87,7 @@ install -p -m 0644 emacs/lfe-start.el %{buildroot}%{_emacs_sitestartdir}
 %if 0%{?need_bootstrap}
 echo "No tests during bootstrapping"
 %else
-rebar eunit -v
+%{erlang_eunit}
 %endif
 
 
@@ -119,23 +97,20 @@ rebar eunit -v
 %{_bindir}/lfe
 %{_bindir}/lfec
 %{_bindir}/lfescript
-%{_erllibdir}/%{realname}-%{version}
-
-
-%files -n emacs-erlang-lfe
-%{_emacs_sitestartdir}/lfe-start.el
-%{_emacs_sitelispdir}/inferior-lfe.elc
-%{_emacs_sitelispdir}/lfe-mode.elc
-%{_emacs_sitelispdir}/lfe-indent.elc
-
-
-%files -n emacs-erlang-lfe-el
+%{erlang_appdir}/
 %{_emacs_sitelispdir}/inferior-lfe.el
-%{_emacs_sitelispdir}/lfe-mode.el
+%{_emacs_sitelispdir}/inferior-lfe.elc
 %{_emacs_sitelispdir}/lfe-indent.el
+%{_emacs_sitelispdir}/lfe-indent.elc
+%{_emacs_sitelispdir}/lfe-mode.el
+%{_emacs_sitelispdir}/lfe-mode.elc
+%{_emacs_sitestartdir}/lfe-start.el
 
 
 %changelog
+* Wed Jun  8 2016 Peter Lemenkov <lemenkov@gmail.com> - 1.0.2-2
+- No longer providing separate emacs-subpackages
+
 * Sat Apr 16 2016 Peter Lemenkov <lemenkov@gmail.com> - 1.0.2-1
 - Ver. 1.0.2
 
