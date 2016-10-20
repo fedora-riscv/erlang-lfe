@@ -14,8 +14,8 @@
 
 
 Name:		erlang-%{realname}
-Version:	1.0.2
-Release:	2%{?dist}
+Version:	1.2.0
+Release:	1%{?dist}
 Summary:	Lisp Flavoured Erlang
 Group:		Development/Languages
 License:	BSD
@@ -108,6 +108,9 @@ echo "No tests during bootstrapping"
 
 
 %changelog
+* Thu Oct 20 2016 Peter Lemenkov <lemenkov@gmail.com> - 1.2.0-1
+- Ver. 1.2.0
+
 * Wed Jun  8 2016 Peter Lemenkov <lemenkov@gmail.com> - 1.0.2-2
 - No longer providing separate emacs-subpackages
 
