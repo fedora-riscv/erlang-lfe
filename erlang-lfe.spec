@@ -4,7 +4,7 @@
 # Set this to true when starting a rebuild of the whole erlang stack. There's a
 # cyclical dependency between erlang-erts, erlang-lfe, and erlang-rebar so this
 # package (erlang-lfe) needs to get built first in bootstrap mode.
-%global need_bootstrap 0
+%global need_bootstrap 1
 
 
 %if 0%{?need_bootstrap}
@@ -14,8 +14,8 @@
 
 
 Name:		erlang-%{realname}
-Version:	1.2.0
-Release:	1%{?dist}
+Version:	1.2.1
+Release:	0%{?dist}
 Summary:	Lisp Flavoured Erlang
 Group:		Development/Languages
 License:	BSD
@@ -53,6 +53,7 @@ mv  -f examples/core-macros.lfe.utf8 examples/core-macros.lfe
 
 %build
 %if 0%{?need_bootstrap}
+mkdir -p ./ebin/
 /usr/bin/erlc -o ./ebin/ src/*.erl
 %else
 %{erlang_compile}
@@ -108,6 +109,9 @@ echo "No tests during bootstrapping"
 
 
 %changelog
+* Wed Nov 23 2016 Peter Lemenkov <lemenkov@gmail.com> - 1.2.1-0
+- Bootstrap ver. 1.2.1
+
 * Thu Oct 20 2016 Peter Lemenkov <lemenkov@gmail.com> - 1.2.0-1
 - Ver. 1.2.0
 

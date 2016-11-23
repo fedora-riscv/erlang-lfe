@@ -8,7 +8,7 @@ dropped in erlang/otp@8e32c07940d9cd1c325d052bded3729333920f81.
 Signed-off-by: Peter Lemenkov <lemenkov@gmail.com>
 
 diff --git a/src/lfe_trans.erl b/src/lfe_trans.erl
-index d400770..5bb72ee 100644
+index 66955be..6d74437 100644
 --- a/src/lfe_trans.erl
 +++ b/src/lfe_trans.erl
 @@ -133,8 +133,6 @@ from_expr({record_field,_,E,R,{atom,_,F}}, Vt0, St0) -> %We KNOW!
