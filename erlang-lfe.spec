@@ -27,6 +27,7 @@ Source0:	https://github.com/%{upstream}/%{realname}/archive/%{version}/%{realnam
 Patch1:		erlang-lfe-0001-Remove-support-for-erlang-packages.patch
 %if 0%{?need_bootstrap}
 BuildRequires:	erlang-erts
+BuildRequires:	erlang-rpm-macros
 %else
 BuildRequires:	erlang-rebar
 %endif
