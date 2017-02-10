@@ -15,7 +15,7 @@
 
 Name:		erlang-%{realname}
 Version:	1.2.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Lisp Flavoured Erlang
 Group:		Development/Languages
 License:	BSD
@@ -111,6 +111,9 @@ echo "No tests during bootstrapping"
 
 
 %changelog
+* Fri Feb 10 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.2.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
 * Wed Nov 23 2016 Peter Lemenkov <lemenkov@gmail.com> - 1.2.1-1
 - Ver. 1.2.1
 - Disable tests for now
