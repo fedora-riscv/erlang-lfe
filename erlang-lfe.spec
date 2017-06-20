@@ -4,7 +4,7 @@
 # Set this to true when starting a rebuild of the whole erlang stack. There's a
 # cyclical dependency between erlang-erts, erlang-lfe, and erlang-rebar so this
 # package (erlang-lfe) needs to get built first in bootstrap mode.
-%global need_bootstrap 1
+%global need_bootstrap 0
 
 
 %if 0%{?need_bootstrap}
@@ -15,7 +15,7 @@
 
 Name:		erlang-%{realname}
 Version:	1.3
-Release:	0%{?dist}
+Release:	1%{?dist}
 Summary:	Lisp Flavoured Erlang
 Group:		Development/Languages
 License:	BSD
@@ -111,11 +111,15 @@ echo "No tests during bootstrapping"
 
 
 %changelog
+* Tue Jun 20 2017 Peter Lemenkov <lemenkov@gmail.com> - 1.3-1
+- Ver. 1.3
+
 * Tue Jun 20 2017 Peter Lemenkov <lemenkov@gmail.com> - 1.3-0
 - Bootstrap ver. 1.3
 
 * Fri Feb 10 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.2.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
 * Wed Nov 23 2016 Peter Lemenkov <lemenkov@gmail.com> - 1.2.1-1
 - Ver. 1.2.1
 - Disable tests for now
