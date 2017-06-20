@@ -8,10 +8,10 @@ dropped in erlang/otp@8e32c07940d9cd1c325d052bded3729333920f81.
 Signed-off-by: Peter Lemenkov <lemenkov@gmail.com>
 
 diff --git a/src/lfe_trans.erl b/src/lfe_trans.erl
-index 66955be..6d74437 100644
+index d2d21b2..628e4eb 100644
 --- a/src/lfe_trans.erl
 +++ b/src/lfe_trans.erl
-@@ -133,8 +133,6 @@ from_expr({record_field,_,E,R,{atom,_,F}}, Vt0, St0) -> %We KNOW!
+@@ -139,8 +139,6 @@ from_expr({record_field,_,E,R,{atom,_,F}}, Vt0, St0) -> %We KNOW!
      RF = list_to_atom(atom_to_list(R) ++ "-" ++ atom_to_list(F)),
      {Le,Vt1,St1} = from_expr(E, Vt0, St0),
      {[RF,Le],Vt1,St1};
@@ -20,9 +20,9 @@ index 66955be..6d74437 100644
  %% Function calls.
  from_expr({call,_,{remote,_,M,F},As}, Vt0, St0) -> %Remote function call
      {Lm,Vt1,St1} = from_expr(M, Vt0, St0),
-@@ -180,16 +178,6 @@ from_expr({op,_,Op,L,R}, Vt0, St0) ->
-     {Lr,Vt2,St2} = from_expr(R, Vt1, St1),
-     {[Op,Ll,Lr],Vt2,St2}.
+@@ -367,16 +365,6 @@ from_rec_fields([{record_field,_,{var,_,F},E}|Fs], Vt0, St0) -> %special case!!
+     {[F,Le|Lfs],Vt2,St2};
+ from_rec_fields([], Vt, St) -> {[],Vt,St}.
  
 -%% from_package_module(Module, VarTable, State) -> {Module,VarTable,State}.
 -%%  We must handle the special case where in pre-R16 you could have
