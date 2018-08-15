@@ -35,6 +35,7 @@ BuildRequires:	erlang-rebar
 BuildRequires:	pkgconfig
 BuildRequires:	emacs
 BuildRequires:	emacs-el
+BuildRequires:	gcc
 Requires:	emacs-filesystem
 Obsoletes:	emacs-erlang-lfe
 Obsoletes:	emacs-erlang-lfe-el
