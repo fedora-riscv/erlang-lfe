@@ -17,7 +17,6 @@ Name:		erlang-%{realname}
 Version:	1.3
 Release:	5%{?dist}
 Summary:	Lisp Flavoured Erlang
-Group:		Development/Languages
 License:	BSD
 URL:		https://github.com/%{upstream}/%{realname}
 %if 0%{?el7}%{?fedora}
