@@ -4,7 +4,7 @@
 # Set this to true when starting a rebuild of the whole erlang stack. There's a
 # cyclical dependency between erlang-erts, erlang-lfe, and erlang-rebar so this
 # package (erlang-lfe) needs to get built first in bootstrap mode.
-%global need_bootstrap 0
+%global need_bootstrap 1
 
 
 %if 0%{?need_bootstrap}
@@ -14,8 +14,8 @@
 
 
 Name:		erlang-%{realname}
-Version:	1.3
-Release:	12%{?dist}
+Version:	2.0.1
+Release:	0.1%{?dist}
 Summary:	Lisp Flavoured Erlang
 License:	BSD
 URL:		https://github.com/%{upstream}/%{realname}
@@ -23,8 +23,6 @@ URL:		https://github.com/%{upstream}/%{realname}
 VCS:		scm:git:https://github.com/%{upstream}/%{realname}.git
 %endif
 Source0:	https://github.com/%{upstream}/%{realname}/archive/%{version}/%{realname}-%{version}.tar.gz
-Patch1:		erlang-lfe-0001-Remove-support-for-erlang-packages.patch
-Patch2:		erlang-lfe-0002-Convert-to-proper-UTF-8.patch
 %if 0%{?need_bootstrap}
 BuildRequires:	erlang-erts
 BuildRequires:	erlang-rpm-macros
@@ -47,9 +45,7 @@ compiler. Code produced with it is compatible with "normal" Erlang
 code. An LFE evaluator and shell is also included.
 
 %prep
-%setup -q -n %{realname}-%{version}
-%patch1 -p1 -b .no_erl_packages
-%patch2 -p1 -b .proper_utf8
+%autosetup -p 1 -n %{realname}-%{version}
 
 
 %build
@@ -111,6 +107,10 @@ echo "No tests during bootstrapping"
 
 
 %changelog
+* Tue Jul 27 2021 Peter Lemenkov <lemenkov@gmail.com> - 2.0.1-0.1
+- Bootstrap ver. 2.0.1
+
+
 * Wed Jul 21 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1.3-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
 
