@@ -4,7 +4,8 @@
 # Set this to true when starting a rebuild of the whole erlang stack. There's a
 # cyclical dependency between erlang-erts, erlang-lfe, and erlang-rebar so this
 # package (erlang-lfe) needs to get built first in bootstrap mode.
-%global need_bootstrap 0
+%global need_bootstrap 1
+%bcond_without bootstrap
 
 
 %if 0%{?need_bootstrap}
@@ -107,6 +108,9 @@ echo "No tests during bootstrapping"
 
 
 %changelog
+* Thu Jun 13 2023 Liu Yang <Yang.Liu.sn@gmail.com> - 2.1.1-2~bootstrap
+- Bootstrap for Fedora 38 riscv64 build.
+
 * Thu Jan 19 2023 Fedora Release Engineering <releng@fedoraproject.org> - 2.1.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_38_Mass_Rebuild
 
